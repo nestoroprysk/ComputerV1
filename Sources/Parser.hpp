@@ -1,7 +1,13 @@
 #pragma once
 
+#include "Chunk.hpp"
+
 #include <string>
-#include <array>
+#include <vector>
+
+namespace Parser {
+
+std::pair<std::vector<Chunk>, std::vector<Chunk>> parse(const std::string& s);
 
 class ParseError : public std::exception
 {
@@ -11,9 +17,5 @@ public:
 private:
     const std::string m_error;
 };
-
-namespace Parser {
-
-std::array<double, 3> parse(const std::string& s);
 
 }

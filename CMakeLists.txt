@@ -16,7 +16,12 @@ file(GLOB ComputerSources   ${SourcesDir}/Parser.hpp
                             ${SourcesDir}/Parser.cpp
                             ${SourcesDir}/Solver.hpp
                             ${SourcesDir}/Solver.cpp
-                            ${SourcesDir}/Types.hpp
+                            ${SourcesDir}/Adapter.hpp
+                            ${SourcesDir}/Adapter.cpp
+                            ${SourcesDir}/Chunk.hpp
+                            ${SourcesDir}/Shower.hpp
+                            ${SourcesDir}/Shower.cpp
+                            ${SourcesDir}/Utils.hpp
 )
 
 add_library(Computer STATIC ${ComputerSources})
@@ -38,6 +43,8 @@ set(TestsDir ${CMAKE_CURRENT_SOURCE_DIR}/Tests)
 file(GLOB TestsSources          ${TestsDir}/main.cpp
                                 ${TestsDir}/Parser.cpp
                                 ${TestsDir}/Solver.cpp
+                                ${TestsDir}/Adapter.cpp
+                                ${TestsDir}/Utils.cpp
 )
 
 add_executable(RunTests ${TestsSources})

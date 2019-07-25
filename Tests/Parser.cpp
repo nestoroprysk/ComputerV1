@@ -1,80 +1,64 @@
 #include "catch.hpp"
 
 #include <Parser.hpp>
+#include <Utils.hpp>
 
-TEST_CASE("<Parser><Valid>")
+TEST_CASE("<Parser><h>")
 {
-    const auto test = "5 * X^0 + 4 * X^1 = 4 * X^0";
+    const auto test = "10=20";
     REQUIRE_NOTHROW(Parser::parse(test));
-    const auto result = Parser::parse(test);
-    REQUIRE(result.size() == 3);
-    REQUIRE(result[0] == 0);
-    REQUIRE(result[1] == 4);
-    REQUIRE(result[2] == 1);
+    const auto pair = Parser::parse(test);
+    const auto& lhs = pair.first;
+    REQUIRE(lhs.size() == 1);
+    REQUIRE(Utils::eq(lhs.at(0).m_coefficient, 10));
+    REQUIRE(lhs.at(0).m_power == 0);
+    const auto& rhs = pair.second;
+    REQUIRE(rhs.size() == 1);
+    REQUIRE(Utils::eq(rhs.at(0).m_coefficient, 20));
+    REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><Invalid><Form>")
+TEST_CASE("<Parser><g>")
 {
-    const auto test = "5 * X^0 + 4 * X^1 = 4 * X^";
-    REQUIRE_THROWS(Parser::parse(test));
+    const auto test = "x=20";
+    REQUIRE_NOTHROW(Parser::parse(test));
+    const auto pair = Parser::parse(test);
+    const auto& lhs = pair.first;
+    REQUIRE(lhs.size() == 1);
+    REQUIRE(Utils::eq(lhs.at(0).m_coefficient, 1));
+    REQUIRE(lhs.at(0).m_power == 1);
+    const auto& rhs = pair.second;
+    REQUIRE(rhs.size() == 1);
+    REQUIRE(Utils::eq(rhs.at(0).m_coefficient, 20));
+    REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><Invalid><=>")
+TEST_CASE("<Parser><f>")
 {
-    const auto test = "5 * X^0 + 4 * X^1 4 * X^2";
-    REQUIRE_THROWS(Parser::parse(test));
+    const auto test = "x10=20";
+    REQUIRE_NOTHROW(Parser::parse(test));
+    const auto pair = Parser::parse(test);
+    const auto& lhs = pair.first;
+    REQUIRE(lhs.size() == 1);
+    REQUIRE(Utils::eq(lhs.at(0).m_coefficient, 1));
+    REQUIRE(lhs.at(0).m_power == 10);
+    const auto& rhs = pair.second;
+    REQUIRE(rhs.size() == 1);
+    REQUIRE(Utils::eq(rhs.at(0).m_coefficient, 20));
+    REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><Invalid><Symbol>")
+TEST_CASE("<Parser><e>")
 {
-    const auto test = "5 * X^0 +| 4 * X^1 = 4 * X^2";
-    REQUIRE_THROWS(Parser::parse(test));
-}
-
-TEST_CASE("<Parser><Invalid><DoubleOperator>")
-{
-    const auto test = "5 * X^0 ++ 4 * X^1 = 4 * X^2";
-    REQUIRE_THROWS(Parser::parse(test));
-}
-
-TEST_CASE("<Parser><Invalid><NoStar>")
-{
-    const auto test = "5 X^0 + 4 * X^1 = 4 * X^2";
-    REQUIRE_THROWS(Parser::parse(test));
-}
-
-TEST_CASE("<Parser><Invalid><NoX>")
-{
-    const auto test = "5 * ^0 + 4 * X^1 = 4 * X^2";
-    REQUIRE_THROWS(Parser::parse(test));
-}
-
-TEST_CASE("<Parser><Invalid><NoPower>")
-{
-    const auto test = "5 * X  0 + 4 * X^1 = 4 * X^2";
-    REQUIRE_THROWS(Parser::parse(test));
-}
-
-TEST_CASE("<Parser><Invalid><NoPowerValue>")
-{
-    const auto test = "5 * X ^  + 4 * X^1 = 4 * X^2";
-    REQUIRE_THROWS(Parser::parse(test));
-}
-
-TEST_CASE("<Parser><Invalid><NoCoefficientBegin>")
-{
-    const auto test = "* X ^ 2 + 4 * X^1 = 4 * X^2";
-    REQUIRE_THROWS(Parser::parse(test));
-}
-
-TEST_CASE("<Parser><Invalid><NoCoefficientMid>")
-{
-    const auto test = "2 * X ^ 2 + * X^1 = 4 * X^2";
-    REQUIRE_THROWS(Parser::parse(test));
-}
-
-TEST_CASE("<Parser><Invalid><BiggerPower>")
-{
-    const auto test = "2 * X ^ 2 + 2 * X^1 = 4 * X^22";
-    REQUIRE_THROWS(Parser::parse(test));
+    const auto test = "2x=20";
+    REQUIRE_NOTHROW(Parser::parse(test));
+    const auto pair = Parser::parse(test);
+    const auto& lhs = pair.first;
+    REQUIRE(lhs.size() == 1);
+    REQUIRE(Utils::eq(lhs.at(0).m_coefficient, 2));
+    REQUIRE(lhs.at(0).m_power == 1);
+    const auto& rhs = pair.second;
+    REQUIRE(rhs.size() == 1);
+    REQUIRE(Utils::eq(rhs.at(0).m_coefficient, 20));
+    REQUIRE(rhs.at(0).m_power == 0);
 }
