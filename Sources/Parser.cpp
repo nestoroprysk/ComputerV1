@@ -1,6 +1,5 @@
 #include "Parser.hpp"
-
-#include <sstream>
+#include "Utils.hpp"
 
 namespace {
 
@@ -51,33 +50,85 @@ std::string toLower(const std::string& s)
     return result;
 }
 
-template <typename T>
-std::unique_ptr<T> get(std::stringstream& ss)
+std::string::const_iterator findSizeTEnd(const std::string& s)
 {
-    if (!ss) return {};
-    auto result = T();
-    ss >> result;
-    if (!ss.fail()) return std::make_unique<T>(result);
-    return {};
+    auto result = s.cbegin();
+    if (s.empty()) return result;
+    while (result != s.cend() && std::isdigit(*result))
+        ++result;
+    return result;
 }
 
-bool get(std::stringstream& ss, const char ch)
+std::unique_ptr<std::size_t> getSizeT(std::string& s)
 {
-    if (!ss) return {};
-    auto result = char();
-    ss >> result;
-    return !ss.fail() && result == ch;
+    const auto end = findSizeTEnd(s);
+    const auto sizeTCandidate = std::string(s.cbegin(), end);
+    try{
+        const auto result = std::stoull(sizeTCandidate);
+        s = std::string(end, s.cend());
+        return std::make_unique<std::size_t>(result);
+    }
+    catch (...){
+        return {};
+    }
+}
+
+std::string::const_iterator findDoubleEnd(const std::string& s)
+{
+    auto result = s.cbegin();
+    if (s.empty()) return result;
+    if (*result == '+' || *result == '-')
+        ++result;
+    auto dotMet = false;
+    while (true){
+        if (result == s.cend())
+            break;
+        if (std::isdigit(*result)){
+            ++result;
+            continue;
+        }
+        if (*result == '.' && !dotMet){
+            ++result;
+            dotMet = true;
+            continue;
+        }
+        return result;
+    }
+    return result;
+}
+
+std::unique_ptr<double> getDouble(std::string& s)
+{
+    const auto end = findDoubleEnd(s);
+    const auto doubleCandidate = std::string(s.cbegin(), end);
+    try{
+        const auto result = std::stod(doubleCandidate);
+        s = std::string(end, s.cend());
+        return std::make_unique<double>(result);
+    }
+    catch (...){
+        return {};
+    }
+}
+
+bool get(std::string& s, const char ch)
+{
+    if (s.empty()) return {};
+    const auto result = s[0] == ch;
+    if (result)
+        s = std::string(std::next(s.cbegin()), s.cend());
+    return result;
 }
 
 namespace ParserDetail {
 
 // a: a * x ^ n
-const auto a = [](std::stringstream ss) -> std::unique_ptr<Chunk>{
-    const auto opt_coefficient = get<double>(ss);
-    const auto opt_multiply = get(ss, '*');
-    const auto opt_x = get(ss, 'x');
-    const auto opt_power_sign = get(ss, '^');
-    const auto opt_power = get<std::size_t>(ss);
+const auto a = [](std::string s) -> std::unique_ptr<Chunk>{
+    const auto opt_coefficient = getDouble(s);
+    const auto opt_multiply = get(s, '*');
+    const auto opt_x = get(s, 'x');
+    const auto opt_power_sign = get(s, '^');
+    const auto opt_power = getSizeT(s);
     if (!opt_coefficient || !opt_multiply || !opt_x ||
         !opt_power_sign || !opt_power)
         return {};
@@ -85,64 +136,70 @@ const auto a = [](std::stringstream ss) -> std::unique_ptr<Chunk>{
 };
 
 // b: a * x
-const auto b = [](std::stringstream ss) -> std::unique_ptr<Chunk>{
-    const auto opt_coefficient = get<double>(ss);
-    const auto opt_multiply = get(ss, '*');
-    const auto opt_x = get(ss, 'x');
+const auto b = [](std::string s) -> std::unique_ptr<Chunk>{
+    const auto opt_coefficient = getDouble(s);
+    const auto opt_multiply = get(s, '*');
+    const auto opt_x = get(s, 'x');
     if (!opt_coefficient || !opt_multiply || !opt_x)
         return {};
     return std::make_unique<Chunk>(*opt_coefficient, 1);
 };
 
 // c: x ^ n
-const auto c = [](std::stringstream ss) -> std::unique_ptr<Chunk>{
-    const auto opt_x = get(ss, 'x');
-    const auto opt_power_sign = get(ss, '^');
-    const auto opt_power = get<std::size_t>(ss);
+const auto c = [](std::string s) -> std::unique_ptr<Chunk>{
+    Utils::unused(get(s, '+'));
+    const auto opt_minus = get(s,'-');
+    const auto opt_x = get(s, 'x');
+    const auto opt_power_sign = get(s, '^');
+    const auto opt_power = getSizeT(s);
     if (!opt_x || !opt_power_sign || !opt_power)
         return {};
-    return std::make_unique<Chunk>(1, *opt_power);
+    return std::make_unique<Chunk>(opt_minus ? -1 : 1, *opt_power);
 };
 
 // d: axn
-const auto d = [](std::stringstream ss) -> std::unique_ptr<Chunk>{
-    const auto opt_coefficient = get<double>(ss);
-    const auto opt_x = get(ss, 'x');
-    const auto opt_power = get<std::size_t>(ss);
+const auto d = [](std::string s) -> std::unique_ptr<Chunk>{
+    const auto opt_coefficient = getDouble(s);
+    const auto opt_x = get(s, 'x');
+    const auto opt_power = getSizeT(s);
     if (!opt_coefficient || !opt_x || !opt_power)
         return {};
     return std::make_unique<Chunk>(*opt_coefficient, *opt_power);
 };
 
 // e: ax
-const auto e = [](std::stringstream ss) -> std::unique_ptr<Chunk>{
-    const auto opt_coefficient = get<double>(ss);
-    const auto opt_x = get(ss, 'x');
+const auto e = [](std::string s) -> std::unique_ptr<Chunk>{
+    const auto opt_coefficient = getDouble(s);
+    const auto opt_x = get(s, 'x');
     if (!opt_coefficient || !opt_x)
         return {};
     return std::make_unique<Chunk>(*opt_coefficient, 1);
 };
 
 // f: xn
-const auto f = [](std::stringstream ss) -> std::unique_ptr<Chunk>{
-    const auto opt_x = get(ss, 'x');
-    const auto opt_power = get<std::size_t>(ss);
+const auto f = [](std::string s) -> std::unique_ptr<Chunk>{
+    Utils::unused(get(s, '+'));
+    const auto opt_minus = get(s,'-');
+    const auto opt_x = get(s, 'x');
+    const auto opt_power = getSizeT(s);
     if (!opt_x || !opt_power)
         return {};
-    return std::make_unique<Chunk>(1, *opt_power);
+    return std::make_unique<Chunk>(opt_minus ? -1 : 1, *opt_power);
 };
 
 // g: x
-const auto g = [](std::stringstream ss) -> std::unique_ptr<Chunk>{
-    const auto opt_x = get(ss, 'x');
+const auto g = [](std::string s) -> std::unique_ptr<Chunk>{
+    Utils::unused(get(s, '+'));
+    const auto opt_minus = get(s,'-');
+    const auto opt_x = get(s, 'x');
     if (!opt_x)
         return {};
-    return std::make_unique<Chunk>(1, 1);
+    return std::make_unique<Chunk>(opt_minus ? -1 : 1, 1);
 };
 
 // h: a
-const auto h = [](std::stringstream ss) -> std::unique_ptr<Chunk>{
-    const auto opt_coefficient = get<double>(ss);
+const auto h = [](std::string s) -> std::unique_ptr<Chunk>{
+    const auto opt_coefficient = getDouble(s);
     if (!opt_coefficient)
         return {};
     return std::make_unique<Chunk>(*opt_coefficient, 0);
@@ -161,11 +218,11 @@ const auto h = [](std::stringstream ss) -> std::unique_ptr<Chunk>{
 // h: a
 std::unique_ptr<Chunk> get(const std::string& s)
 {
-    using Parser = std::function<std::unique_ptr<Chunk>(std::stringstream)>;
+    using Parser = std::function<std::unique_ptr<Chunk>(std::string)>;
     using namespace ParserDetail;
     static const auto ps = std::vector<Parser>{ a, b, c, d, e, f, g, h };
     for (const auto& p : ps)
-        if (auto opt_chunk = p(std::stringstream(s)))
+        if (auto opt_chunk = p(s))
             return opt_chunk;
     return {}; 
 }
