@@ -129,7 +129,7 @@ const auto a = [](std::string s) -> std::unique_ptr<Chunk>{
     const auto opt_x = get(s, 'x');
     const auto opt_power_sign = get(s, '^');
     const auto opt_power = getSizeT(s);
-    if (!opt_coefficient || !opt_multiply || !opt_x ||
+    if (!s.empty() || !opt_coefficient || !opt_multiply || !opt_x ||
         !opt_power_sign || !opt_power)
         return {};
     return std::make_unique<Chunk>(*opt_coefficient, *opt_power);
@@ -140,7 +140,7 @@ const auto b = [](std::string s) -> std::unique_ptr<Chunk>{
     const auto opt_coefficient = getDouble(s);
     const auto opt_multiply = get(s, '*');
     const auto opt_x = get(s, 'x');
-    if (!opt_coefficient || !opt_multiply || !opt_x)
+    if (!s.empty() || !opt_coefficient || !opt_multiply || !opt_x)
         return {};
     return std::make_unique<Chunk>(*opt_coefficient, 1);
 };
@@ -152,7 +152,7 @@ const auto c = [](std::string s) -> std::unique_ptr<Chunk>{
     const auto opt_x = get(s, 'x');
     const auto opt_power_sign = get(s, '^');
     const auto opt_power = getSizeT(s);
-    if (!opt_x || !opt_power_sign || !opt_power)
+    if (!s.empty() || !opt_x || !opt_power_sign || !opt_power)
         return {};
     return std::make_unique<Chunk>(opt_minus ? -1 : 1, *opt_power);
 };
@@ -162,7 +162,7 @@ const auto d = [](std::string s) -> std::unique_ptr<Chunk>{
     const auto opt_coefficient = getDouble(s);
     const auto opt_x = get(s, 'x');
     const auto opt_power = getSizeT(s);
-    if (!opt_coefficient || !opt_x || !opt_power)
+    if (!s.empty() || !opt_coefficient || !opt_x || !opt_power)
         return {};
     return std::make_unique<Chunk>(*opt_coefficient, *opt_power);
 };
@@ -171,7 +171,7 @@ const auto d = [](std::string s) -> std::unique_ptr<Chunk>{
 const auto e = [](std::string s) -> std::unique_ptr<Chunk>{
     const auto opt_coefficient = getDouble(s);
     const auto opt_x = get(s, 'x');
-    if (!opt_coefficient || !opt_x)
+    if (!s.empty() || !opt_coefficient || !opt_x)
         return {};
     return std::make_unique<Chunk>(*opt_coefficient, 1);
 };
@@ -182,7 +182,7 @@ const auto f = [](std::string s) -> std::unique_ptr<Chunk>{
     const auto opt_minus = get(s,'-');
     const auto opt_x = get(s, 'x');
     const auto opt_power = getSizeT(s);
-    if (!opt_x || !opt_power)
+    if (!s.empty() || !opt_x || !opt_power)
         return {};
     return std::make_unique<Chunk>(opt_minus ? -1 : 1, *opt_power);
 };
@@ -192,7 +192,7 @@ const auto g = [](std::string s) -> std::unique_ptr<Chunk>{
     Utils::unused(get(s, '+'));
     const auto opt_minus = get(s,'-');
     const auto opt_x = get(s, 'x');
-    if (!opt_x)
+    if (!s.empty() || !opt_x)
         return {};
     return std::make_unique<Chunk>(opt_minus ? -1 : 1, 1);
 };
@@ -200,7 +200,7 @@ const auto g = [](std::string s) -> std::unique_ptr<Chunk>{
 // h: a
 const auto h = [](std::string s) -> std::unique_ptr<Chunk>{
     const auto opt_coefficient = getDouble(s);
-    if (!opt_coefficient)
+    if (!s.empty() || !opt_coefficient)
         return {};
     return std::make_unique<Chunk>(*opt_coefficient, 0);
 };
@@ -257,5 +257,9 @@ std::pair<std::vector<Chunk>, std::vector<Chunk>>
 Parser::parse(const std::string& s)
 {
     const auto pair = splitAt(toLower(validate(filterSpaces(s))), '=');
-    return { getChunks(pair.first), getChunks(pair.second) };
+    auto lhs = getChunks(pair.first);
+    if (lhs.empty()) throw Parser::ParseError("Non-empty lhs expected");
+    auto rhs = getChunks(pair.second);
+    if (rhs.empty()) throw Parser::ParseError("Non-empty rhs expected");
+    return { std::move(lhs), std::move(rhs) };
 }
