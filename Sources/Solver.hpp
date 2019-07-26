@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Chunk.hpp"
+
 #include <vector>
-#include <array>
 
 namespace Solver{
 
-std::vector<double> solve(const std::array<double, 3>& i_input);
+std::vector<double> solve(const std::vector<Chunk>& i_input);
 
 }

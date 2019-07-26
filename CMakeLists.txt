@@ -16,8 +16,8 @@ file(GLOB ComputerSources   ${SourcesDir}/Parser.hpp
                             ${SourcesDir}/Parser.cpp
                             ${SourcesDir}/Solver.hpp
                             ${SourcesDir}/Solver.cpp
-                            ${SourcesDir}/Adapter.hpp
-                            ${SourcesDir}/Adapter.cpp
+                            ${SourcesDir}/Simplifier.hpp
+                            ${SourcesDir}/Simplifier.cpp
                             ${SourcesDir}/Chunk.hpp
                             ${SourcesDir}/Shower.hpp
                             ${SourcesDir}/Shower.cpp
@@ -43,7 +43,7 @@ set(TestsDir ${CMAKE_CURRENT_SOURCE_DIR}/Tests)
 file(GLOB TestsSources          ${TestsDir}/main.cpp
                                 ${TestsDir}/Parser.cpp
                                 ${TestsDir}/Solver.cpp
-                                ${TestsDir}/Adapter.cpp
+                                ${TestsDir}/Simplifier.cpp
                                 ${TestsDir}/Utils.cpp
 )
 
