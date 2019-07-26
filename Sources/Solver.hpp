@@ -16,7 +16,7 @@ private:
     const std::string m_error;
 };
 
-enum class Result { InvalidEquation, ValidEquationNoX, InfiniteResults, OneRoot, TwoRoots, NoRoots };
+enum class Result { InvalidEquation, ValidEquationNoX, InfiniteRoots, OneRoot, TwoRoots, NoRoots };
 
 std::pair<std::vector<double>, Result>
 solve(const std::vector<Chunk>& i_input);

@@ -112,3 +112,29 @@ TEST_CASE("<Solver><OneRoot><BiggerThanZeroD>")
     REQUIRE(Utils::eq(pair.first.at(1), (3.0 / 2) + (std::sqrt(5) / 2)));
     REQUIRE(pair.second == Solver::Result::TwoRoots);
 }
+
+TEST_CASE("<Solver><InfiniteRoots><1>")
+{
+    const auto test = "x=x";
+    REQUIRE_NOTHROW(Solver::solve(
+        Simplifier::simplify(
+            Parser::parse(test))));
+    const auto pair = Solver::solve(
+        Simplifier::simplify(
+            Parser::parse(test)));
+    REQUIRE(pair.first.empty());
+    REQUIRE(pair.second == Solver::Result::InfiniteRoots);
+}
+
+TEST_CASE("<Solver><InfiniteRoots><2>")
+{
+    const auto test = "x2=x2";
+    REQUIRE_NOTHROW(Solver::solve(
+        Simplifier::simplify(
+            Parser::parse(test))));
+    const auto pair = Solver::solve(
+        Simplifier::simplify(
+            Parser::parse(test)));
+    REQUIRE(pair.first.empty());
+    REQUIRE(pair.second == Solver::Result::InfiniteRoots);
+}
