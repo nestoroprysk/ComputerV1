@@ -3,3 +3,4 @@
 3. Show simplified
 4. Complex solutions
 5. Research edge inputs
+6. Test doubles

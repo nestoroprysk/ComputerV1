@@ -6,27 +6,32 @@ static constexpr auto g_usage = R"(
 noprysk, 2019
 
 Usage:
-    ./Run "chunk_0 op chunk_1 ... op chunk_n = chunk_0_1"
+    ./Run "chunk op chunk ... op chunk = chunk"
 
-where a chunk is:
-    a: a * x ^ n
-    b: a * x
-    c: x ^ n
-    d: axn
-    e: ax
-    f: xn
-    g: x
-    h: a
+where
+    a chunk is in one of the forms:
+        a: a * x ^ n
+        b: a * x
+        c: x ^ n
+        d: axn
+        e: ax
+        f: xn
+        g: x
+        h: a
 
-where op is:
-    a. +
-    b. -
+        where
+            a is a double
+            x is a char x or X
+            n is an unsigned number
+
+    an op is + or -
+
 )";
 
 int main()
 {
     try{
-        throw Parser::ParseError("show(solve(adopt(parse())))");
+        throw Parser::ParseError("show(solve(simplify(parse())))");
     }
     catch (const Parser::ParseError& e){
         std::cerr << std::endl << "Error: " << e.what() << std::endl;
