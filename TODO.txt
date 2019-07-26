@@ -1,3 +1,4 @@
 1. Write my own pow
 2. Show parsed
 3. Show simplified
+4. Complex solutions
