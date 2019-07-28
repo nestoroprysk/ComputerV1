@@ -35,28 +35,24 @@ double getCoefficientOr(const std::vector<Chunk>& i_input, const double i_altern
 namespace SolverDetail {
 
 // a = 0
-const auto a = [](const std::vector<Chunk>& i_input)
-            -> std::pair<std::vector<double>, Result>{
-    return { {}, Utils::eq(getCoefficient<0>(i_input), 0)
-        ? Result::ValidEquationNoX
-        : Result::InvalidEquation };
+const auto a = [](const std::vector<Chunk>& i_input) -> Result{
+    // TODO: assert
+    return Utils::eq(getCoefficient<0>(i_input), 0)
+        ? Result{ValidEquationNoX{}}
+        :  Result{InvalidEquation{}};
 };
 
 // x + a = 0
 // x = 0
-const auto b = [](const std::vector<Chunk>& i_input)
-            -> std::pair<std::vector<double>, Result>{
+const auto b = [](const std::vector<Chunk>& i_input) -> Result{
     const auto root = -getCoefficientOr<0>(i_input, 0) /
         getCoefficient<1>(i_input);
-    auto result = std::vector<double>();
-    result.push_back(root);
-    return { result, Result::OneRoot };
+    return Result{OneRoot{root}};
 };
 
 // x2 + x + a = 0
 // (a)x2 + (b)x + (c)a = 0
-const auto c = [](const std::vector<Chunk>& i_input)
-            -> std::pair<std::vector<double>, Result>{
+const auto c = [](const std::vector<Chunk>& i_input) -> Result{
     const auto a = getCoefficient<2>(i_input);
     const auto b = getCoefficientOr<1>(i_input, 0);
     const auto c = getCoefficientOr<0>(i_input, 0);
@@ -64,32 +60,28 @@ const auto c = [](const std::vector<Chunk>& i_input)
     if (Utils::eq(a, 0)) throw std::logic_error("c(input), (a) cannot be zero");
     if (Utils::eq(d, 0)){
         const auto root = -b / 2 * a;
-        auto result = std::vector<double>();
-        result.push_back(root);
-        return { result, Result::OneRoot };
+        return Result{OneRoot{root}};
     }
     if (d < 0)
-        return { {}, Result::NoRoots };
+        return Result{NoRoots{}};
     // d > 0
     auto result = std::vector<double>();
     const auto x1 = (-b - Utils::sqrt(d)) / (2 * a);
     const auto x2 = (-b + Utils::sqrt(d)) / (2 * a);
     result.push_back(x1);
     result.push_back(x2);
-    return { result, Result::TwoRoots };
+    return Result{TwoRoots{std::min(x1, x2), std::max(x1, x2)}};
 };
 
 }
 
 }
 
-std::pair<std::vector<double>, Result>
-Solver::solve(const std::vector<Chunk>& i_input)
+Result Solver::solve(const std::vector<Chunk>& i_input)
 {
     if (i_input.empty()) throw ComputationError("Non-empty input expected");
     const auto biggestPower = findBiggestPower(i_input);
-    using Solver = std::function<std::pair<std::vector<double>, Result>
-                        (const std::vector<Chunk>& i_input)>;
+    using Solver = std::function<Result(const std::vector<Chunk>& i_input)>;
     using namespace SolverDetail;
     static const auto solvers = std::vector<Solver> { a, b, c };
     try{

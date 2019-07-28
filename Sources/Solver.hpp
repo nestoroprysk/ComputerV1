@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <variant>
 
 namespace Solver{
 
@@ -16,9 +17,13 @@ private:
     const std::string m_error;
 };
 
-enum class Result { InvalidEquation, ValidEquationNoX, InfiniteRoots, OneRoot, TwoRoots, NoRoots };
-
-std::pair<std::vector<double>, Result>
-solve(const std::vector<Chunk>& i_input);
+struct InvalidEquation{};
+struct ValidEquationNoX{};
+struct InfiniteRoots{};
+struct OneRoot{const double m_root;};
+struct TwoRoots{const double m_smaller; const double m_bigger;};
+struct NoRoots{};
+using Result = std::variant<InvalidEquation, ValidEquationNoX, InfiniteRoots, OneRoot, TwoRoots, NoRoots>;
+Result solve(const std::vector<Chunk>& i_input);
 
 }

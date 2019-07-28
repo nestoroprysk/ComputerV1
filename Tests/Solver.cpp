@@ -29,8 +29,7 @@ TEST_CASE("<Solver><InvalidEquation>")
     REQUIRE(rhs.at(0).m_power == 0);
     REQUIRE_NOTHROW(Solver::solve(input));
     const auto result = Solver::solve(input);
-    REQUIRE(result.first.empty());
-    REQUIRE(result.second == Solver::Result::InvalidEquation);
+    REQUIRE(std::holds_alternative<Solver::InvalidEquation>(result));
 }
 
 TEST_CASE("<Solver><ValidEquationNoX>")
@@ -53,8 +52,7 @@ TEST_CASE("<Solver><ValidEquationNoX>")
     REQUIRE(rhs.at(0).m_power == 0);
     REQUIRE_NOTHROW(Solver::solve(input));
     const auto result = Solver::solve(input);
-    REQUIRE(result.first.empty());
-    REQUIRE(result.second == Solver::Result::ValidEquationNoX);
+    REQUIRE(std::holds_alternative<Solver::ValidEquationNoX>(result));
 }
 
 TEST_CASE("<Solver><OneRoot>")
@@ -63,12 +61,14 @@ TEST_CASE("<Solver><OneRoot>")
     REQUIRE_NOTHROW(Solver::solve(
         Simplifier::simplify(
             Parser::parse(test))));
-    const auto pair = Solver::solve(
+    const auto result = Solver::solve(
         Simplifier::simplify(
             Parser::parse(test)));
-    REQUIRE(pair.first.size() == 1);
-    REQUIRE(Utils::eq(pair.first.at(0), 5));
-    REQUIRE(pair.second == Solver::Result::OneRoot);
+    REQUIRE(std::holds_alternative<Solver::OneRoot>(result));
+    std::visit(Utils::overloaded {
+        [](const Solver::OneRoot& i_solution) { REQUIRE(Utils::eq(i_solution.m_root, 5)); },
+        [](auto) { REQUIRE(!"Invalid visit"); }
+    }, result);
 }
 
 TEST_CASE("<Solver><OneRoot><ZeroD>")
@@ -77,12 +77,14 @@ TEST_CASE("<Solver><OneRoot><ZeroD>")
     REQUIRE_NOTHROW(Solver::solve(
         Simplifier::simplify(
             Parser::parse(test))));
-    const auto pair = Solver::solve(
+    const auto result = Solver::solve(
         Simplifier::simplify(
             Parser::parse(test)));
-    REQUIRE(pair.first.size() == 1);
-    REQUIRE(Utils::eq(pair.first.at(0), 1));
-    REQUIRE(pair.second == Solver::Result::OneRoot);
+    REQUIRE(std::holds_alternative<Solver::OneRoot>(result));
+    std::visit(Utils::overloaded {
+        [](const Solver::OneRoot& i_solution) { REQUIRE(Utils::eq(i_solution.m_root, 1)); },
+        [](auto) { REQUIRE(!"Invalid visit"); }
+    }, result);
 }
 
 TEST_CASE("<Solver><OneRoot><LessThanZeroD>")
@@ -91,11 +93,10 @@ TEST_CASE("<Solver><OneRoot><LessThanZeroD>")
     REQUIRE_NOTHROW(Solver::solve(
         Simplifier::simplify(
             Parser::parse(test))));
-    const auto pair = Solver::solve(
+    const auto result = Solver::solve(
         Simplifier::simplify(
             Parser::parse(test)));
-    REQUIRE(pair.first.empty());
-    REQUIRE(pair.second == Solver::Result::NoRoots);
+    REQUIRE(std::holds_alternative<Solver::NoRoots>(result));
 }
 
 TEST_CASE("<Solver><OneRoot><BiggerThanZeroD>")
@@ -104,13 +105,17 @@ TEST_CASE("<Solver><OneRoot><BiggerThanZeroD>")
     REQUIRE_NOTHROW(Solver::solve(
         Simplifier::simplify(
             Parser::parse(test))));
-    const auto pair = Solver::solve(
+    const auto result = Solver::solve(
         Simplifier::simplify(
             Parser::parse(test)));
-    REQUIRE(pair.first.size() == 2);
-    REQUIRE(Utils::eq(pair.first.at(0), (3.0 / 2) - (std::sqrt(5) / 2)));
-    REQUIRE(Utils::eq(pair.first.at(1), (3.0 / 2) + (std::sqrt(5) / 2)));
-    REQUIRE(pair.second == Solver::Result::TwoRoots);
+    REQUIRE(std::holds_alternative<Solver::TwoRoots>(result));
+    std::visit(Utils::overloaded {
+        [](const Solver::TwoRoots& i_solution){
+            REQUIRE(Utils::eq(i_solution.m_smaller, (3.0 / 2) - (std::sqrt(5) / 2)));
+            REQUIRE(Utils::eq(i_solution.m_bigger, (3.0 / 2) + (std::sqrt(5) / 2)));
+        },
+        [](auto) { REQUIRE(!"Invalid visit"); }
+    }, result);
 }
 
 TEST_CASE("<Solver><InfiniteRoots><1>")
@@ -119,11 +124,10 @@ TEST_CASE("<Solver><InfiniteRoots><1>")
     REQUIRE_NOTHROW(Solver::solve(
         Simplifier::simplify(
             Parser::parse(test))));
-    const auto pair = Solver::solve(
+    const auto result = Solver::solve(
         Simplifier::simplify(
             Parser::parse(test)));
-    REQUIRE(pair.first.empty());
-    REQUIRE(pair.second == Solver::Result::InfiniteRoots);
+    REQUIRE(std::holds_alternative<Solver::InfiniteRoots>(result));
 }
 
 TEST_CASE("<Solver><InfiniteRoots><2>")
@@ -132,9 +136,8 @@ TEST_CASE("<Solver><InfiniteRoots><2>")
     REQUIRE_NOTHROW(Solver::solve(
         Simplifier::simplify(
             Parser::parse(test))));
-    const auto pair = Solver::solve(
+    const auto result = Solver::solve(
         Simplifier::simplify(
             Parser::parse(test)));
-    REQUIRE(pair.first.empty());
-    REQUIRE(pair.second == Solver::Result::InfiniteRoots);
+    REQUIRE(std::holds_alternative<Solver::InfiniteRoots>(result));
 }
