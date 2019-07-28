@@ -36,7 +36,6 @@ namespace SolverDetail {
 
 // a = 0
 const auto a = [](const std::vector<Chunk>& i_input) -> Result{
-    // TODO: assert
     return Utils::eq(getCoefficient<0>(i_input), 0)
         ? Result{ValidEquationNoX{}}
         :  Result{InvalidEquation{}};

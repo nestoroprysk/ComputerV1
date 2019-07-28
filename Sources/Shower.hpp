@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
+#include "Solver.hpp"
 
 namespace Shower {
 
-void show(std::vector<double>& i_solution);
+void show(const Solver::Result& i_solution);
 
 }
