@@ -1,5 +1,7 @@
 #include "Utils.hpp"
 
+#include <string>
+
 namespace {
 
 double halve(const double a)
@@ -18,7 +20,8 @@ double betterGuess(double x, double g) {
 
 double guess(double x, double g, std::size_t nbCyclesLeft)
 {
-    if (!nbCyclesLeft) return g;
+    if (!nbCyclesLeft) throw std::logic_error("sqrt(), failed to find the root of [" +
+        std::to_string(x) + ']');
     return closeEnough(x / g, g) ? g : guess(x, betterGuess(x, g), nbCyclesLeft - 1);
 }
 
