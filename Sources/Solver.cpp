@@ -9,7 +9,7 @@ std::size_t findBiggestPower(const std::vector<Chunk>& i_input)
 {
     auto result = std::size_t(0);
     for (const auto& c : i_input)
-        result = std::max(result, c.m_power);
+        result = Utils::max(result, c.m_power);
     return result;
 }
 
@@ -79,7 +79,7 @@ const auto c = [](const std::vector<Chunk>& i_input) -> Result{
     const auto x2 = (-b + Utils::sqrt(d)) / (2 * a);
     result.push_back(x1);
     result.push_back(x2);
-    return Result{TwoRoots{std::min(x1, x2), std::max(x1, x2)}};
+    return Result{TwoRoots{Utils::min(x1, x2), Utils::max(x1, x2)}};
 };
 
 }

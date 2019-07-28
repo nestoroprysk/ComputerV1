@@ -22,6 +22,7 @@ file(GLOB ComputerSources   ${SourcesDir}/Parser.hpp
                             ${SourcesDir}/Shower.hpp
                             ${SourcesDir}/Shower.cpp
                             ${SourcesDir}/Utils.hpp
+                            ${SourcesDir}/Utils.cpp
 )
 
 add_library(Computer STATIC ${ComputerSources})
