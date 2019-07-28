@@ -7,8 +7,13 @@ namespace {
 
 void showChunk(const Chunk& i_chunk)
 {
-    std::cout << (i_chunk.m_coefficient <= 0 ? " " : " +") <<
+    std::cout << (i_chunk.m_coefficient < 0 ? " " : " +") <<
         i_chunk.m_coefficient << "x^" << i_chunk.m_power;
+}
+
+void showDegree(const std::vector<Chunk>& i_simplified)
+{
+    std::cout << "Degree: " << Utils::findBiggestDegree(i_simplified) << std::endl;
 }
 
 }
@@ -31,6 +36,7 @@ const std::vector<Chunk>& Shower::show(const std::vector<Chunk>& i_simplified)
     for (const auto& c : i_simplified)
         showChunk(c);
     std::cout << "= 0" << std::endl;
+    showDegree(i_simplified);
     return i_simplified;
 }
 

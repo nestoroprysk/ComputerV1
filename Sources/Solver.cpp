@@ -5,14 +5,6 @@ namespace {
 
 using namespace Solver;
 
-std::size_t findBiggestPower(const std::vector<Chunk>& i_input)
-{
-    auto result = std::size_t(0);
-    for (const auto& c : i_input)
-        result = Utils::max(result, c.m_power);
-    return result;
-}
-
 template <std::size_t i_power>
 double getCoefficient(const std::vector<Chunk>& i_input)
 {
@@ -89,7 +81,7 @@ const auto c = [](const std::vector<Chunk>& i_input) -> Result{
 Result Solver::solve(const std::vector<Chunk>& i_input)
 {
     if (i_input.empty()) throw ComputationError("Non-empty input expected");
-    const auto biggestPower = findBiggestPower(i_input);
+    const auto biggestPower = Utils::findBiggestDegree(i_input);
     using Solver = std::function<Result(const std::vector<Chunk>& i_input)>;
     using namespace SolverDetail;
     static const auto solvers = std::vector<Solver> { a, b, c };

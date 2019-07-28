@@ -4,3 +4,4 @@
 4. Complex solutions
 5. Research edge inputs
 6. Test doubles
+7. Remove TODOs from the code

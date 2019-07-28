@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Chunk.hpp"
+
+#include <vector>
+
 namespace Utils {
 
 bool eq(const double a, const double b);
@@ -23,5 +27,7 @@ double sqrt(const double a);
 // taken from https://en.cppreference.com/w/cpp/utility/variant/visit
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+std::size_t findBiggestDegree(const std::vector<Chunk>& i_input);
 
 }

@@ -34,3 +34,13 @@ double Utils::sqrt(const double a)
 {
     return guess(a, halve(a));
 }
+
+std::size_t Utils::findBiggestDegree(const std::vector<Chunk>& i_input)
+{
+    auto result = std::size_t(0);
+    for (const auto& c : i_input)
+        // TODO: uncomment if and fix the Solver
+        // if (!eq(c.m_coefficient, 0))
+            result = max(result, c.m_power);
+    return result;
+}
