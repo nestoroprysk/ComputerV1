@@ -6,7 +6,9 @@
 
 namespace Utils {
 
-bool eq(const double a, const double b);
+static constexpr auto g_e = static_cast<double>(0.00001);
+
+bool eq(const double a, const double b, const double e = g_e);
 
 // implemented for the restrains of the subject
 template <typename T>
@@ -21,7 +23,6 @@ template <typename T>
 constexpr T max(const T& i_lhs, const T& i_rhs) { return i_lhs > i_rhs ? i_lhs : i_rhs; }
 
 // implemented for the restrains of the subject
-// Babylonian method taken from https://www.codeproject.com/Articles/69941/Best-Square-Root-Method-Algorithm-Function-Precisi
 double sqrt(const double a);
 
 // taken from https://en.cppreference.com/w/cpp/utility/variant/visit
