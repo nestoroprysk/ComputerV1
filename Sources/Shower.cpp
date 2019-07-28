@@ -7,7 +7,7 @@ namespace {
 
 void showChunk(const Chunk& i_chunk)
 {
-    std::cout << ' ' << (i_chunk.m_coefficient <= 0 ? '-' : '+') <<
+    std::cout << (i_chunk.m_coefficient <= 0 ? " " : " +") <<
         i_chunk.m_coefficient << "x^" << i_chunk.m_power;
 }
 
@@ -40,7 +40,6 @@ const Solver::Result& Shower::show(const Solver::Result& i_solution)
     std::cout << "Result: ";
     std::visit(Utils::overloaded {
         [](const InvalidEquation&) { std::cout << "invalid equation" << std::endl; },
-        [](const ValidEquationNoX&) { std::cout << "valid equation without X" << std::endl; },
         [](const InfiniteRoots&) { std::cout << "any rational X satisfies the equation" << std::endl; },
         [](const OneRoot& i_sol) { std::cout << "single root found [" << i_sol.m_root << ']' << std::endl; },
         [](const TwoRoots& i_sol) { std::cout << "two roots found [" << i_sol.m_smaller << "] and [" << i_sol.m_bigger << ']' << std::endl; },

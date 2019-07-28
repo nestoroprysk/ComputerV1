@@ -37,7 +37,7 @@ namespace SolverDetail {
 // a = 0
 const auto a = [](const std::vector<Chunk>& i_input) -> Result{
     return Utils::eq(getCoefficient<0>(i_input), 0)
-        ? Result{ValidEquationNoX{}}
+        ? Result{InfiniteRoots{}}
         :  Result{InvalidEquation{}};
 };
 

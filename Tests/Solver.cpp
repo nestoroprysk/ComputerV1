@@ -32,7 +32,7 @@ TEST_CASE("<Solver><InvalidEquation>")
     REQUIRE(std::holds_alternative<Solver::InvalidEquation>(result));
 }
 
-TEST_CASE("<Solver><ValidEquationNoX>")
+TEST_CASE("<Solver><InfiniteRoots><NoX>")
 {
     const auto test = "10=10";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -52,7 +52,7 @@ TEST_CASE("<Solver><ValidEquationNoX>")
     REQUIRE(rhs.at(0).m_power == 0);
     REQUIRE_NOTHROW(Solver::solve(input));
     const auto result = Solver::solve(input);
-    REQUIRE(std::holds_alternative<Solver::ValidEquationNoX>(result));
+    REQUIRE(std::holds_alternative<Solver::InfiniteRoots>(result));
 }
 
 TEST_CASE("<Solver><OneRoot>")

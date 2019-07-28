@@ -18,12 +18,11 @@ private:
 };
 
 struct InvalidEquation{};
-struct ValidEquationNoX{};
 struct InfiniteRoots{};
 struct OneRoot{const double m_root;};
 struct TwoRoots{const double m_smaller; const double m_bigger;};
 struct NoRoots{};
-using Result = std::variant<InvalidEquation, ValidEquationNoX, InfiniteRoots, OneRoot, TwoRoots, NoRoots>;
+using Result = std::variant<InvalidEquation, InfiniteRoots, OneRoot, TwoRoots, NoRoots>;
 Result solve(const std::vector<Chunk>& i_input);
 
 }
