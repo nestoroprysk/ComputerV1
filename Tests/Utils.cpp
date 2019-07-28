@@ -6,8 +6,8 @@
 
 TEST_CASE("<sqrt><nearZero>")
 {
-    const auto delta = 0.001;
-    const auto nbCycles = 100;
+    const auto delta = 0.00001;
+    const auto nbCycles = 10000;
     for (auto i = 0; i < nbCycles; ++i)
         REQUIRE(Utils::eq(Utils::sqrt(i * delta), std::sqrt(i * delta)));
 }
@@ -15,8 +15,8 @@ TEST_CASE("<sqrt><nearZero>")
 TEST_CASE("<sqrt><bigNumbers>")
 {
     const auto delta = 0.01;
-    const auto nbCycles = 100;
-    const auto big = 10000000;
+    const auto nbCycles = 10000;
+    const auto big = 10000;
     for (auto i = 0; i < nbCycles; ++i)
         REQUIRE(Utils::eq(Utils::sqrt(big * i * delta), std::sqrt(big * i * delta)));
 }

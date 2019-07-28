@@ -6,7 +6,7 @@
 
 namespace Utils {
 
-static constexpr auto g_e = static_cast<double>(0.00001);
+static constexpr auto g_e = static_cast<double>(0.000001);
 
 bool eq(const double a, const double b, const double e = g_e);
 
@@ -23,6 +23,7 @@ template <typename T>
 constexpr T max(const T& i_lhs, const T& i_rhs) { return i_lhs > i_rhs ? i_lhs : i_rhs; }
 
 // implemented for the restrains of the subject
+// taken from https://stackoverflow.com/questions/3581528/how-is-the-square-root-function-implemented
 double sqrt(const double a);
 
 // taken from https://en.cppreference.com/w/cpp/utility/variant/visit
