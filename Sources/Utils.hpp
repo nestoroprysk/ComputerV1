@@ -17,10 +17,4 @@ inline double sqrt(const double a)
     return std::sqrt(a);
 }
 
-template <typename T>
-void unused(T const& u)
-{
-    (void)u;
-}
-
 }
