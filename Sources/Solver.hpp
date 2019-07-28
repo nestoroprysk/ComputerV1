@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Chunk.hpp"
+#include "Adapter.hpp"
 
 #include <string>
 #include <vector>
@@ -17,12 +18,13 @@ private:
     const std::string m_error;
 };
 
-struct InvalidEquation{};
-struct InfiniteRoots{};
-struct OneRoot{const double m_root;};
-struct TwoRoots{const double m_smaller; const double m_bigger;};
+struct AnyRationalNumber{};
+struct InvalidEquation{double m_c;};
 struct NoRoots{};
-using Result = std::variant<InvalidEquation, InfiniteRoots, OneRoot, TwoRoots, NoRoots>;
-Result solve(const std::vector<Chunk>& i_input);
+struct OneRoot{double m_root;};
+struct TwoRoots{double m_smaller; double m_bigger;};
+using Result = std::variant<AnyRationalNumber, InvalidEquation, NoRoots, OneRoot, TwoRoots>;
+
+Result solve(const Adapter::Input& i_input);
 
 }

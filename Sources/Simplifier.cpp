@@ -1,4 +1,5 @@
 #include "Simplifier.hpp"
+#include "Utils.hpp"
 
 #include <unordered_map>
 
@@ -7,11 +8,12 @@ namespace {
 using Power = std::size_t;
 struct Coefficient { double m_coefficient = 0; };
 
-std::vector<Chunk> copy(const std::unordered_map<Power, Coefficient>& i_input)
+std::vector<Chunk> copyNonZero(const std::unordered_map<Power, Coefficient>& i_input)
 {
     auto result = std::vector<Chunk>();
     for (const auto& pair : i_input)
-        result.emplace_back(pair.second.m_coefficient, pair.first);
+        if (!Utils::eq(pair.second.m_coefficient, 0))
+            result.emplace_back(pair.second.m_coefficient, pair.first);
     return result;
 }
 
@@ -34,5 +36,5 @@ Simplifier::simplify(const std::pair<std::vector<Chunk>,
         hash[c.m_power].m_coefficient += c.m_coefficient;
     for (const auto& c : i_input.second)
         hash[c.m_power].m_coefficient -= c.m_coefficient;
-    return sort(copy(hash));
+    return sort(copyNonZero(hash));
 }

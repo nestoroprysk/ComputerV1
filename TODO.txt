@@ -1,7 +1,3 @@
-1. Write my own pow
-2. Show parsed
-3. Show simplified
-4. Complex solutions
-5. Research edge inputs
-6. Test doubles
-7. Remove TODOs from the code
+1. Complex solutions
+2. Test doubles
+3. Research sqrt

@@ -1,5 +1,6 @@
 #include <Parser.hpp>
 #include <Simplifier.hpp>
+#include <Adapter.hpp>
 #include <Solver.hpp>
 #include <Shower.hpp>
 
@@ -49,7 +50,7 @@ int main(const int argc, const char** argv)
         if (argc != 2)
             throw Parser::ParseError("Simple argument expected, got [" + std::to_string(argc - 1) + ']');
         using namespace Shower;
-        show(Solver::solve(show(Simplifier::simplify(show(Parser::parse(argv[1]))))));
+        show(Solver::solve(show(Adapter::adopt(show(Simplifier::simplify(show(Parser::parse(argv[1]))))))));
     }
     catch (const Parser::ParseError& e){
         printError(e.what());
@@ -57,14 +58,11 @@ int main(const int argc, const char** argv)
     }
     catch (const Solver::ComputationError& e){
         printError(e.what());
-        std::cerr << g_usage << std::endl;
     }
     catch (const std::logic_error& e){
         printError(e.what());
-        std::cerr << g_usage << std::endl;
     }
     catch (...){
         printError("Unexpected exception met");
-        std::cerr << g_usage << std::endl;
     }
 }

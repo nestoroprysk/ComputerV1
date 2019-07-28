@@ -21,6 +21,8 @@ file(GLOB ComputerSources   ${SourcesDir}/Parser.hpp
                             ${SourcesDir}/Chunk.hpp
                             ${SourcesDir}/Shower.hpp
                             ${SourcesDir}/Shower.cpp
+                            ${SourcesDir}/Adapter.hpp
+                            ${SourcesDir}/Adapter.cpp
                             ${SourcesDir}/Utils.hpp
                             ${SourcesDir}/Utils.cpp
 )
@@ -45,6 +47,7 @@ file(GLOB TestsSources          ${TestsDir}/main.cpp
                                 ${TestsDir}/Parser.cpp
                                 ${TestsDir}/Solver.cpp
                                 ${TestsDir}/Simplifier.cpp
+                                ${TestsDir}/Adapter.cpp
                                 ${TestsDir}/Utils.cpp
 )
 
