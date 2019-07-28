@@ -3,8 +3,8 @@
 #include <Parser.hpp>
 #include <Utils.hpp>
 
-TEST_CASE("<Parser><h><eq><h>")
-{
+TEST_CASE("<Parser><I><eq><I>")
+{ 
     const auto test = "10=20";
     REQUIRE_NOTHROW(Parser::parse(test));
     const auto pair = Parser::parse(test);
@@ -18,7 +18,22 @@ TEST_CASE("<Parser><h><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><e><Minus><h><eq><h>")
+TEST_CASE("<Parser><C><eq><C>")
+{ 
+    const auto test = "10x^2=20x^1";
+    REQUIRE_NOTHROW(Parser::parse(test));
+    const auto pair = Parser::parse(test);
+    const auto& lhs = pair.first;
+    REQUIRE(lhs.size() == 1);
+    REQUIRE(Utils::eq(lhs.at(0).m_coefficient, 10));
+    REQUIRE(lhs.at(0).m_power == 2);
+    const auto& rhs = pair.second;
+    REQUIRE(rhs.size() == 1);
+    REQUIRE(Utils::eq(rhs.at(0).m_coefficient, 20));
+    REQUIRE(rhs.at(0).m_power == 1);
+}
+
+TEST_CASE("<Parser><F><Minus><I><eq><I>")
 {
     const auto test = "-2x-10=20";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -35,7 +50,7 @@ TEST_CASE("<Parser><e><Minus><h><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><g><eq><h>")
+TEST_CASE("<Parser><H><eq><I>")
 {
     const auto test = "x=20";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -50,7 +65,7 @@ TEST_CASE("<Parser><g><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><f><eq><h>")
+TEST_CASE("<Parser><G><eq><I>")
 {
     const auto test = "x10=20";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -65,7 +80,7 @@ TEST_CASE("<Parser><f><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><e><eq><h>")
+TEST_CASE("<Parser><F><eq><I>")
 {
     const auto test = "2x=20";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -80,7 +95,7 @@ TEST_CASE("<Parser><e><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><d><eq><h>")
+TEST_CASE("<Parser><E><eq><I>")
 {
     const auto test = "10x2=20";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -95,7 +110,7 @@ TEST_CASE("<Parser><d><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><c><eq><h>")
+TEST_CASE("<Parser><D><eq><I>")
 {
     const auto test = "x^2=20";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -110,7 +125,7 @@ TEST_CASE("<Parser><c><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><b><eq><h>")
+TEST_CASE("<Parser><B><eq><I>")
 {
     const auto test = "10*x=20";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -125,7 +140,7 @@ TEST_CASE("<Parser><b><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><a><eq><h>")
+TEST_CASE("<Parser><A><eq><I>")
 {
     const auto test = "10*x^2=20";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -140,7 +155,7 @@ TEST_CASE("<Parser><a><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><a><Plus><b><eq><h>")
+TEST_CASE("<Parser><A><Plus><B><eq><I>")
 {
     const auto test = "10*x^2+20*x=20";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -157,7 +172,7 @@ TEST_CASE("<Parser><a><Plus><b><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><a><Minus><b><eq><h>")
+TEST_CASE("<Parser><A><Minus><B><eq><I>")
 {
     const auto test = "10*x^2-20*x=20";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -174,7 +189,7 @@ TEST_CASE("<Parser><a><Minus><b><eq><h>")
     REQUIRE(rhs.at(0).m_power == 0);
 }
 
-TEST_CASE("<Parser><a><Minus><b><eq><c><Minus><d>")
+TEST_CASE("<Parser><A><Minus><B><eq><D><Minus><E>")
 {
     const auto test = "10*x^2-20*x=x^2-3x2";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -193,7 +208,7 @@ TEST_CASE("<Parser><a><Minus><b><eq><c><Minus><d>")
     REQUIRE(rhs.at(1).m_power == 2);
 }
 
-TEST_CASE("<Parser><a><Minus><b><Plus><e><eq><c><Minus><d><Plus><f>")
+TEST_CASE("<Parser><A><Minus><B><Plus><F><eq><D><Minus><E><Plus><G>")
 {
     const auto test = "10*x^2-20*x+4x=x^2-3x2+x3";
     REQUIRE_NOTHROW(Parser::parse(test));
@@ -216,7 +231,7 @@ TEST_CASE("<Parser><a><Minus><b><Plus><e><eq><c><Minus><d><Plus><f>")
     REQUIRE(rhs.at(2).m_power == 3);
 }
 
-TEST_CASE("<Parser><a><Minus><c><Minus><f><eq><a><Minus><a><Minus><g>")
+TEST_CASE("<Parser><A><Minus><D><Minus><G><eq><A><Minus><A><Minus><H>")
 {
     const auto test = "-5*x^2-x^1-x2=+10*x^3-5*x^2-x";
     REQUIRE_NOTHROW(Parser::parse(test));

@@ -17,12 +17,13 @@ where
     a chunk is in one of the forms:
         a: a * x ^ n
         b: a * x
-        c: x ^ n
-        d: axn
-        e: ax
-        f: xn
-        g: x
-        h: a
+        c: ax ^ n
+        d: x ^ n
+        e: axn
+        f: ax
+        g: xn
+        h: x
+        i: a
 
         where
             a is a double
@@ -47,7 +48,8 @@ int main(const int argc, const char** argv)
     try{
         if (argc != 2)
             throw Parser::ParseError("Simple argument expected, got [" + std::to_string(argc - 1) + ']');
-        Shower::show(Solver::solve(Simplifier::simplify(Parser::parse(argv[1]))));
+        using namespace Shower;
+        show(Solver::solve(show(Simplifier::simplify(show(Parser::parse(argv[1]))))));
     }
     catch (const Parser::ParseError& e){
         printError(e.what());

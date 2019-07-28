@@ -147,8 +147,19 @@ const auto b = [](std::string s) -> std::optional<Chunk>{
     return std::make_optional<Chunk>( *opt_coefficient, 1 );
 };
 
-// c: x ^ n
+// c: ax^n
 const auto c = [](std::string s) -> std::optional<Chunk>{
+    const auto opt_coefficient = getDouble(s);
+    const auto opt_x = get(s, 'x');
+    const auto opt_power_sign = get(s, '^');
+    const auto opt_power = getSizeT(s);
+    if (!s.empty() || !opt_coefficient || !opt_x || !opt_power_sign || !opt_power)
+        return {};
+    return std::make_optional<Chunk>( *opt_coefficient, *opt_power );
+};
+
+// d: x ^ n
+const auto d = [](std::string s) -> std::optional<Chunk>{
     [[maybe_unused]] const auto opt_plus = get(s, '+');
     const auto opt_minus = get(s,'-');
     const auto opt_x = get(s, 'x');
@@ -159,8 +170,8 @@ const auto c = [](std::string s) -> std::optional<Chunk>{
     return std::make_optional<Chunk>(static_cast<double>(opt_minus ? -1 : 1), *opt_power);
 };
 
-// d: axn
-const auto d = [](std::string s) -> std::optional<Chunk>{
+// e: axn
+const auto e = [](std::string s) -> std::optional<Chunk>{
     const auto opt_coefficient = getDouble(s);
     const auto opt_x = get(s, 'x');
     const auto opt_power = getSizeT(s);
@@ -169,8 +180,8 @@ const auto d = [](std::string s) -> std::optional<Chunk>{
     return std::make_optional<Chunk>(*opt_coefficient, *opt_power);
 };
 
-// e: ax
-const auto e = [](std::string s) -> std::optional<Chunk>{
+// f: ax
+const auto f = [](std::string s) -> std::optional<Chunk>{
     const auto opt_coefficient = getDouble(s);
     const auto opt_x = get(s, 'x');
     if (!s.empty() || !opt_coefficient || !opt_x)
@@ -178,8 +189,8 @@ const auto e = [](std::string s) -> std::optional<Chunk>{
     return std::make_optional<Chunk>(*opt_coefficient, 1);
 };
 
-// f: xn
-const auto f = [](std::string s) -> std::optional<Chunk>{
+// g: xn
+const auto g = [](std::string s) -> std::optional<Chunk>{
     [[maybe_unused]] const auto opt_plus = get(s, '+');
     const auto opt_minus = get(s,'-');
     const auto opt_x = get(s, 'x');
@@ -189,8 +200,8 @@ const auto f = [](std::string s) -> std::optional<Chunk>{
     return std::make_optional<Chunk>(static_cast<double>(opt_minus ? -1 : 1), *opt_power);
 };
 
-// g: x
-const auto g = [](std::string s) -> std::optional<Chunk>{
+// h: x
+const auto h = [](std::string s) -> std::optional<Chunk>{
     [[maybe_unused]] const auto opt_plus = get(s, '+');
     const auto opt_minus = get(s,'-');
     const auto opt_x = get(s, 'x');
@@ -199,8 +210,8 @@ const auto g = [](std::string s) -> std::optional<Chunk>{
     return std::make_optional<Chunk>(static_cast<double>(opt_minus ? -1 : 1), 1);
 };
 
-// h: a
-const auto h = [](std::string s) -> std::optional<Chunk>{
+// i: a
+const auto i = [](std::string s) -> std::optional<Chunk>{
     const auto opt_coefficient = getDouble(s);
     if (!s.empty() || !opt_coefficient)
         return {};
@@ -209,20 +220,11 @@ const auto h = [](std::string s) -> std::optional<Chunk>{
 
 }
 
-// Possible forms:
-// a: a * x ^ n
-// b: a * x
-// c: x ^ n
-// d: axn
-// e: ax
-// f: xn
-// g: x
-// h: a
 std::optional<Chunk> get(const std::string& s)
 {
     using Parser = std::function<std::optional<Chunk>(std::string)>;
     using namespace ParserDetail;
-    static const auto ps = std::vector<Parser>{ a, b, c, d, e, f, g, h };
+    static const auto ps = std::vector<Parser>{ a, b, c, d, e, f, g, h, i };
     for (const auto& p : ps)
         if (auto opt_chunk = p(s))
             return opt_chunk;
