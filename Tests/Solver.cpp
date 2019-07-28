@@ -141,3 +141,27 @@ TEST_CASE("<Solver><InfiniteRoots><2>")
             Parser::parse(test)));
     REQUIRE(std::holds_alternative<Solver::InfiniteRoots>(result));
 }
+
+TEST_CASE("<Solver><InvalidEquation><1>")
+{
+    const auto test = "x1+2=x1";
+    REQUIRE_NOTHROW(Solver::solve(
+        Simplifier::simplify(
+            Parser::parse(test))));
+    const auto result = Solver::solve(
+        Simplifier::simplify(
+            Parser::parse(test)));
+    REQUIRE(std::holds_alternative<Solver::InvalidEquation>(result));
+}
+
+TEST_CASE("<Solver><InvalidEquation><2>")
+{
+    const auto test = "x2+2=x2";
+    REQUIRE_NOTHROW(Solver::solve(
+        Simplifier::simplify(
+            Parser::parse(test))));
+    const auto result = Solver::solve(
+        Simplifier::simplify(
+            Parser::parse(test)));
+    REQUIRE(std::holds_alternative<Solver::InvalidEquation>(result));
+}

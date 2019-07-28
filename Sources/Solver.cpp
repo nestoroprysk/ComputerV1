@@ -42,8 +42,15 @@ const auto a = [](const std::vector<Chunk>& i_input) -> Result{
 };
 
 // x + a = 0
-// x = 0
+// (a)x2 + (b)x + (c)a = 0
 const auto b = [](const std::vector<Chunk>& i_input) -> Result{
+    const auto b = getCoefficient<1>(i_input);
+    const auto c = getCoefficientOr<0>(i_input, 0);
+    if (Utils::eq(b, 0) && Utils::eq(c, 0))
+        // x = x
+        return Result{InfiniteRoots{}};
+    if (Utils::eq(b, 0))
+        return Result{InvalidEquation{}};
     const auto root = -getCoefficientOr<0>(i_input, 0) /
         getCoefficient<1>(i_input);
     return Result{OneRoot{root}};
@@ -56,7 +63,10 @@ const auto c = [](const std::vector<Chunk>& i_input) -> Result{
     const auto b = getCoefficientOr<1>(i_input, 0);
     const auto c = getCoefficientOr<0>(i_input, 0);
     const auto d = b * b - 4 * a * c;
-    if (Utils::eq(a, 0)) throw std::logic_error("c(input), (a) cannot be zero");
+    if (Utils::eq(a, 0) && Utils::eq(b, 0) && Utils::eq(c, 0))
+        return Result{InfiniteRoots{}};
+    if (Utils::eq(a, 0))
+        return Result{InvalidEquation{}};
     if (Utils::eq(d, 0)){
         const auto root = -b / 2 * a;
         return Result{OneRoot{root}};
