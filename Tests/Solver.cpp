@@ -9,7 +9,7 @@
 #include <Utils.hpp>
 
 #include <cmath>
-
+#include <iostream>
 TEST_CASE("<Solver><InvalidEquation>")
 {
     const auto test = "10=20";
@@ -109,7 +109,9 @@ TEST_CASE("<Solver><OneRoot><LessThanZeroD>")
         Adapter::adopt(
         Simplifier::simplify(
             Parser::parse(test))));
-    REQUIRE(std::holds_alternative<Solver::NoRoots>(result));
+    REQUIRE(std::holds_alternative<Solver::JustImaginaryRoots>(result));
+    REQUIRE(Utils::eq(std::get<Solver::JustImaginaryRoots>(result).m_a, 0.5));
+    REQUIRE(Utils::eq(std::get<Solver::JustImaginaryRoots>(result).m_i_coefficient, 0.866025));
 }
 
 TEST_CASE("<Solver><OneRoot><BiggerThanZeroD>")

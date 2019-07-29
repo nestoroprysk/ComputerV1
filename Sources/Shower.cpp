@@ -1,8 +1,6 @@
 #include "Shower.hpp"
 #include "Utils.hpp"
 
-#include <iostream>
-
 namespace {
 
 void showChunk(const Chunk& i_chunk)
@@ -58,7 +56,9 @@ const Solver::Result& Shower::show(const Solver::Result& i_solution)
     std::visit(Utils::overloaded {
         [](const AnyRationalNumber&) { std::cout << "any rational number satisfies the equation"; },
         [](const InvalidEquation& i_sol) { std::cout << "invalid equation [" << i_sol.m_c << " = 0]"; },
-        [](const NoRoots&) { std::cout << "No roots found"; },
+        [](const JustImaginaryRoots& i_sol) { std::cout << "No real roots, imaginary [" <<
+            std::to_string(i_sol.m_a) << " +" << std::to_string(i_sol.m_i_coefficient)  << " * i] and [" <<
+            std::to_string(i_sol.m_a) << ' ' << std::to_string(-i_sol.m_i_coefficient) << " * i]"; },
         [](const OneRoot& i_sol) { std::cout << "single root found [" << i_sol.m_root << ']'; },
         [](const TwoRoots& i_sol) { std::cout << "two roots found [" << i_sol.m_smaller << "] and [" << i_sol.m_bigger << ']'; },
         [](auto) { throw std::logic_error("Invalid type for the visit"); }

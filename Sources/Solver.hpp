@@ -20,10 +20,10 @@ private:
 
 struct AnyRationalNumber{};
 struct InvalidEquation{double m_c;};
-struct NoRoots{};
+struct JustImaginaryRoots{double m_a; double m_i_coefficient;};
 struct OneRoot{double m_root;};
 struct TwoRoots{double m_smaller; double m_bigger;};
-using Result = std::variant<AnyRationalNumber, InvalidEquation, NoRoots, OneRoot, TwoRoots>;
+using Result = std::variant<AnyRationalNumber, InvalidEquation, JustImaginaryRoots, OneRoot, TwoRoots>;
 
 Result solve(const Adapter::Input& i_input);
 

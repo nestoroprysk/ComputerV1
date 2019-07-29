@@ -22,8 +22,11 @@ Result solveTwoDegree(const TwoDegree& i_input)
         const auto root = -i_input.m_b / (2 * i_input.m_a);
         return Result{OneRoot{root}};
     }
-    if (d < 0)
-        return Result{NoRoots{}};
+    if (d < 0){
+        const auto a = -i_input.m_b / (2 * i_input.m_a);
+        const auto i_coefficient = Utils::abs(Utils::sqrt(Utils::abs(d)) / (2 * i_input.m_a));
+        return Result{JustImaginaryRoots{a, i_coefficient}};
+    }
     // d > 0
     auto result = std::vector<double>();
     const auto x1 = (-i_input.m_b - Utils::sqrt(d)) / (2 * i_input.m_a);

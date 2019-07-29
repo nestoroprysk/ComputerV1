@@ -1,3 +1,1 @@
-1. Complex solutions
-2. Test doubles
-3. Test double
+1. Test doubles
