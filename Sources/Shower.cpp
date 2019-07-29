@@ -1,6 +1,8 @@
 #include "Shower.hpp"
 #include "Utils.hpp"
 
+#include <iostream>
+
 namespace {
 
 void showChunk(const Chunk& i_chunk)

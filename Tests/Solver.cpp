@@ -9,7 +9,7 @@
 #include <Utils.hpp>
 
 #include <cmath>
-#include <iostream>
+
 TEST_CASE("<Solver><InvalidEquation>")
 {
     const auto test = "10=20";
