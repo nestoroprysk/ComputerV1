@@ -20,7 +20,7 @@ Result solveTwoDegree(const TwoDegree& i_input)
         - 4 * i_input.m_a * i_input.m_c;
     if (Utils::eq(d, 0)){
         const auto root = -i_input.m_b / (2 * i_input.m_a);
-        return Result{OneRoot{root}};
+        return Result{OneRootZeroD{root}};
     }
     if (d < 0){
         const auto a = -i_input.m_b / (2 * i_input.m_a);

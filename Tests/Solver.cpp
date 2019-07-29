@@ -80,7 +80,7 @@ TEST_CASE("<Solver><OneRoot>")
     }, result);
 }
 
-TEST_CASE("<Solver><OneRoot><ZeroD>")
+TEST_CASE("<Solver><OneRootZeroD>")
 {
     const auto test = "x2-2x+1=0";
     REQUIRE_NOTHROW(Solver::solve(
@@ -91,9 +91,9 @@ TEST_CASE("<Solver><OneRoot><ZeroD>")
         Adapter::adopt(
         Simplifier::simplify(
             Parser::parse(test))));
-    REQUIRE(std::holds_alternative<Solver::OneRoot>(result));
+    REQUIRE(std::holds_alternative<Solver::OneRootZeroD>(result));
     std::visit(Utils::overloaded {
-        [](const Solver::OneRoot& i_solution) { REQUIRE(Utils::eq(i_solution.m_root, 1)); },
+        [](const Solver::OneRootZeroD& i_solution) { REQUIRE(Utils::eq(i_solution.m_root, 1)); },
         [](auto) { REQUIRE(!"Invalid visit"); }
     }, result);
 }

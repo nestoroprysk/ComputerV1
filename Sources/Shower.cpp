@@ -58,11 +58,12 @@ const Solver::Result& Shower::show(const Solver::Result& i_solution)
     std::visit(Utils::overloaded {
         [](const AnyRationalNumber&) { std::cout << "any rational number satisfies the equation"; },
         [](const InvalidEquation& i_sol) { std::cout << "invalid equation [" << i_sol.m_c << " = 0]"; },
-        [](const JustImaginaryRoots& i_sol) { std::cout << "No real roots, imaginary [" <<
+        [](const JustImaginaryRoots& i_sol) { std::cout << "d < 0, no real roots, imaginary [" <<
             std::to_string(i_sol.m_a) << " +" << std::to_string(i_sol.m_i_coefficient)  << " * i] and [" <<
             std::to_string(i_sol.m_a) << ' ' << std::to_string(-i_sol.m_i_coefficient) << " * i]"; },
         [](const OneRoot& i_sol) { std::cout << "single root found [" << i_sol.m_root << ']'; },
-        [](const TwoRoots& i_sol) { std::cout << "two roots found [" << i_sol.m_smaller << "] and [" << i_sol.m_bigger << ']'; },
+        [](const OneRootZeroD& i_sol) { std::cout << "d is 0, single root found [" << i_sol.m_root << ']'; },
+        [](const TwoRoots& i_sol) { std::cout << "d > 0, two roots found [" << i_sol.m_smaller << "] and [" << i_sol.m_bigger << ']'; },
         [](auto) { throw std::logic_error("Invalid type for the visit"); }
     }, i_solution);
     std::cout << std::endl;
